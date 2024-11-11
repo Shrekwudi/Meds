@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %} Profile {% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1>Welcome, {{ current_user.first_name }}</h1>
+       {% include "_message.html" %}
+     <div class="row g-4">
+       <div class="col-lg-8">
+        <div class="p-3 border bg-light">
+            {% if current_user.medicines %}
+                <div class="table-responsive">
+                    <h2 class="text-center">Medications </h2>
+                     <table class="table table-success table-striped table-hover">
+                         <caption>List of current medications</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">S/N</th>
+                      <th scope="col">Medicine Name</th>
+                      <th scope="col">Dosage</th>
+                      <th scope="col">Frequency</th>
+                        <th scope="col"></th>
+                    </tr>
+                  </thead>
+                    <tbody>
+                        {% for medicine in medicines %}
+                        <tr>
+                          <th scope="row">{{ medicine.id }}</th>
+                          <td>{{ medicine.name }}</td>
+                          <td>{{ medicine.dosage }}/ {{ medicine.dosage_unit }}</td>
+                          <td>{{ medicine.frequency }} / {{ medicine.frequency_unit }}</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                    <a href="{{ url_for('edit', med_id=medicine.id) }}" class="btn btn-primary btn-warning"><i class="fas fa-edit"></i> </a>
+                                    <a href="{{ url_for('delete', med_id=medicine.id) }}" class="btn btn-primary btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                </div>
+
+                            </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                </table>
+                </div>
+            {% else %}
+                <h2 class="text-center">No medication information to track yet. </h2>
+            {% endif %}
+        </div>
+       </div>
+       <div class="col-lg-4">
+         <div class="p-3 border bg-light">
+             <h2 class="text-center">Add new info </h2>
+            {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "lg teal"}) }}
+         </div>
+       </div>
+     </div>
+   </div>
+{% endblock %}
